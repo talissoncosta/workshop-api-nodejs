@@ -40,7 +40,7 @@ O workshop tem como objetivo apresentar os conceitos básicos de uma API Rest, a
 * Levar pedidos para cozinha
 * Servir o cliente da melhor forma
 
-** Cozinha** - Servidor
+**Cozinha** - Servidor
 * Prepara o pedido
 
 
@@ -56,7 +56,7 @@ O workshop tem como objetivo apresentar os conceitos básicos de uma API Rest, a
 + **Client-server**: Separação do cliente e do armazenamento de dados (servidor), dessa forma, poderemos ter uma portabilidade do nosso sistema, usando o React ou AngularJs para WEB e React Native ou Ionic para o smartphone, por exemplo.
 + **Stateless**: Cada requisição que o cliente faz para o servidor, deverá conter todas as informações necessárias para o servidor entender e responder (RESPONSE) a requisição (REQUEST). Exemplo: A sessão do usuário deverá ser enviada em todas as requisições, para saber se aquele usuário está autenticado e apto a usar os serviços, e o servidor não pode lembrar que o cliente foi autenticado na requisição anterior. Nos nossos cursos, temos por padrão usar tokens para as comunicações.
 + **Cacheable**: As respostas para uma requisição, deverão ser explicitas ao dizer se aquela resquição, pode ou não ser cacheada pelo cliente.
-+ ** Layered System** : O cliente acessa a um endpoint, sem precisar saber da complexidade, de quais passos estão sendo necessários para o servidor responder a requisição, ou quais outras camadas o servidor estará lidando, para que a requisição seja respondida.
++  **Layered** **System** : O cliente acessa a um endpoint, sem precisar saber da complexidade, de quais passos estão sendo necessários para o servidor responder a requisição, ou quais outras camadas o servidor estará lidando, para que a requisição seja respondida.
 + **Code on demand (optional)** : Dá a possibilidade da nossa aplicação pegar códigos, como o javascript, por exemplo, e executar no cliente.
 
   
@@ -238,8 +238,9 @@ http://servicorest.com.br/vendas
 	* Utilizar o morgan para gerenciar os logs 
 		* O Morgan, que é uma forma de logar ou mostrar quais requisições estão chegando em nosso servidor HTTP.
 	* Adicionando morgan ao projeto
-	```yarn add morgan```
+		```yarn add morgan```
 	* Utilizar morgan no projeto
+		
 		```js 
 		const  morgan  =  require('morgan');
 			
@@ -315,6 +316,159 @@ http://servicorest.com.br/vendas
 			
 			res.status(200).json(profissional);
 		})
+# Etapa2
+
+* Organização dos arquivos por rotas
+	* Para organizar nosso projeto de uma forma mais concisa, vamos criar primeiramente duas pastas:
+		* controller - Vai centralizar o processamento das requests 
+		* routes - Vai centralizar as rotas da nossa aplicação
+	* Após a reorganizacao dos arquivos obtemos a seguinte estrutura:
+				- `server.js`
+				- `controller/profissionais.js`
+				- `routes/profissionais.js`
+	* E os arquivos ficarm assim: 
+		* server.js
+			```js 
+			const  express  =  require('express');
+			const  app  =  express();
+			const  morgan  =  require('morgan');
+
+			const  routes  =  require('./routes/profissionais');
+			app.use(express.json());
+			app.use(morgan('dev'));
+			app.use(routes);
+			
+			app.listen(3000,  ()  =>  {	
+				console.log("Server is running");
+			}) 
+		* routes/profissionais.js
+		```js 
+		const  express  =  require('express');
+		const  router  =  express.Router();
+		const  profissionaisController  =  require('../controller/profissionais')
+		//Verbos HTTP
+		//GET - Receber dados de um Resource
+		router.get('/profissionais',  profissionaisController.buscar_todos);
+		router.get('/profissionais/:id',  profissionaisController.buscar_id);
+
+		//POST - Enviar dados ou informações para serem processados por um Resource.
+		router.post('/profissionais',  profissionaisController.salvar);
+		
+		//PUT - Atualizar dados de um Resource
+		router.put('/profissionais/:id',  profissionaisController.atualizar);
+	
+		//DELETE - Deletar um Resource
+		router.delete('/profissionais/:id',  profissionaisController.remover);
+		
+		module.exports  =  router;
+	* controller/profissionais.js
+	```js 
+	const  data  =  require("../../profissionais.json");
+	var  buscar_todos  =  (req,  res)  =>  {	
+		res.status(200).json(data);
+	}
+
+  
+
+var  buscar_id  =  (req,  res)  =>  {
+
+const  {  id  }  =  req.params;
+
+const  profissional  =  data.find(prof  =>  prof.id  ==  id);
+
+  
+
+if (!profissional) return  res.status(204).json();
+
+  
+
+res.status(200).json(profissional);
+
+}
+
+  
+
+var  salvar  =  (req,  res)  =>  {
+
+const  {  nome,  email  }  =  req.body;
+
+const  profissional  =  {
+
+"id":  data.length +  1,
+
+"nome":  nome,
+
+"email":  email
+
+};
+
+data.push(profissional);
+
+res.status(200).json(profissional);
+
+}
+
+  
+
+var  atualizar  =  (req,  res)  =>  {
+
+const  {  id  }  =  req.params;
+
+const  profissional  =  data.find(prof  =>  prof.id  ==  id);
+
+  
+
+if (!profissional) return  res.status(204).json();
+
+const  {  nome,email}  =  req.body;
+
+  
+
+profissional.nome  =  nome;
+
+profissional.email  =  email;
+
+  
+
+res.status(200).json(profissional);
+
+  
+
+}
+
+  
+
+var  remover  =  (req,  res)  =>  {
+
+const  {  id  }  =  req.params;
+
+const  profissional  =  data.filter(prof  =>  prof.id  !=  id);
+
+  
+
+res.status(200).json(profissional);
+
+  
+
+}
+
+  
+
+module.exports  =  {
+
+buscar_todos,
+
+buscar_id,
+
+salvar,
+
+atualizar,
+
+remover
+}
+* O que é Jason Web Token (JWT) ?
+* Criar Basic Authentication
+*  Realizar testes de autenticação com Postman
 
 ## Referências 
 
