@@ -341,29 +341,30 @@ http://servicorest.com.br/vendas
 	* Utilizar o morgan para gerenciar os logs 
 		* O Morgan, que é uma forma de logar ou mostrar quais requisições estão chegando em nosso servidor HTTP.
 	* Adicionando morgan ao projeto
-	```yarn add morgan```
+	```yarn add morgan```
 	* Utilizar morgan no projeto
 		```js 
-			const  morgan  =  require('morgan');
+		const  morgan  =  require('morgan');
 			
-			app.use(morgan('dev'))	
+		app.use(morgan('dev'))	
+	
 	* Processando request
-	```js
+		```js
 		app.get('/profissionais',  (req,res)  =>{
 			res.json(data);
 		})
 
 * Atribuir boas respostas para as requests - Status das respostas
 	* Tratando caso não encontrar nenhum profissional, informando ``status 204 - No content``
-	```js  
-	app.get('/profissionais/:id',  (req,res)  =>{
-		const  {  id  }  =  req.params;
-		const  profissional  =  data.find( prof  =>  prof.id  ==  id);
-		
-		if (!profissional) return  res.status(204).json();
-		
-		res.json(profissional);
-		})
+		```js  
+		app.get('/profissionais/:id',  (req,res)  =>{
+			const  {  id  }  =  req.params;
+			const  profissional  =  data.find( prof  =>  prof.id  ==  id);
+			
+			if (!profissional) return  res.status(204).json();
+			
+			res.json(profissional);
+			})
 	
 * Processando rotas - GET, POST, PUT, DELETE
 	* GET
