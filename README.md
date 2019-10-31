@@ -4,10 +4,10 @@ O workshop tem como objetivo apresentar os conceitos básicos de uma API Rest, a
 
 ## Softwares necessários
 
-NodeJS - versão >=10 - https://nodejs.org/en/
-Postman - https://www.getpostman.com/downloads/
-MongoDB - https://www.mongodb.com/
-Robo3T ( Não é primordial) - https://robomongo.org/download
++ NodeJS - versão >=10 - https://nodejs.org/en/
++ Postman - https://www.getpostman.com/downloads/
++ MongoDB - https://www.mongodb.com/
++ Robo3T ( Não é primordial) - https://robomongo.org/download
 
 ## Introducao ao conceito REST
 ### Restaurante 
