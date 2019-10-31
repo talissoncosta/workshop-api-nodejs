@@ -421,9 +421,9 @@ http://servicorest.com.br/vendas
 
 ## Referências 
 
-[https://becode.com.br/o-que-e-api-rest-e-restful/](https://becode.com.br/o-que-e-api-rest-e-restful/)
-[https://blog.caelum.com.br/rest-principios-e-boas-praticas/](https://blog.caelum.com.br/rest-principios-e-boas-praticas/)
-[https://medium.com/tableless/entendendo-tokens-jwt-json-web-token-413c6d1397f6](https://medium.com/tableless/entendendo-tokens-jwt-json-web-token-413c6d1397f6)
-[https://www.4linux.com.br/o-que-e-middleware](https://www.4linux.com.br/o-que-e-middleware)
-[https://www.json.org/json-pt.html](https://www.json.org/json-pt.html)
-[https://www.devpleno.com/morgan/](https://www.devpleno.com/morgan/)
++ [https://becode.com.br/o-que-e-api-rest-e-restful/](https://becode.com.br/o-que-e-api-rest-e-restful/)
++ [https://blog.caelum.com.br/rest-principios-e-boas-praticas/](https://blog.caelum.com.br/rest-principios-e-boas-praticas/)
++ [https://medium.com/tableless/entendendo-tokens-jwt-json-web-token-413c6d1397f6](https://medium.com/tableless/entendendo-tokens-jwt-json-web-token-413c6d1397f6)
++ [https://www.4linux.com.br/o-que-e-middleware](https://www.4linux.com.br/o-que-e-middleware)
++ [https://www.json.org/json-pt.html](https://www.json.org/json-pt.html)
++ [https://www.devpleno.com/morgan/](https://www.devpleno.com/morgan/)
