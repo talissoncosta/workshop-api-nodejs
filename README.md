@@ -2,15 +2,15 @@
 
 O workshop tem como objetivo apresentar os conceitos básicos de uma API Rest, através de exemplos e analogias. Desenvolver na prática uma API Rest utilizando NodeJS aplicando os conceitos apresentados e utilizando boas práticas para o desenvolvimento. Na atividade prática será desenvolvido um CRUD básico onde será possível entender os conceitos de rotas, autenticação, realizar testes de rotas e armazenamento de dados com MongoDB.
 
-##Softwares necessários
+## Softwares necessários
 
 NodeJS - versão >=10 - https://nodejs.org/en/
 Postman - https://www.getpostman.com/downloads/
 MongoDB - https://www.mongodb.com/
 Robo3T ( Não é primordial) - https://robomongo.org/download
 
-##Introducao ao conceito REST
-###Restaurante 
+## Introducao ao conceito REST
+### Restaurante 
 + Limpo
 + Com bom atendimento
 + Que lhe entregue tudo o você solicitou corretamente
@@ -27,14 +27,14 @@ Garçom - API
 Cozinha - Servidor
 * Prepara o pedido
 
-####PROTOCOLO HTTP - Bloco de notas do garçom
+#### PROTOCOLO HTTP - Bloco de notas do garçom
 
 + HTTP - Hypertext Transfer Protocol - Transferência de dados
 + REST - REpresentation State Transfer  - 
 	+ É um estilo de arquitetura de software que define um conjunto de restrições a serem usados para a criação de web services.
 	+ Delimita algumas obrigações nessas transferências de dados.
 
-###Restrições  - Constraints 
+### Restrições  - Constraints 
 + Uniform Interface: Manter uma uniformidade, uma constância, um padrão na construção da interface. Nossa API precisa ser coerente para quem vai consumi-lá. Precisa fazer sentido para o cliente e não ser confusa. Logo, coisas como: o uso correto dos verbos HTTP; endpoints coerentes (todos os endpoints no plural, por exemplo); usar somente uma linguagem de comunicação (json) e não várias ao mesmo tempo; sempre enviar respostas aos clientes; são exemplos de aplicação de uma interface uniforme.
 
 + Client-server: Separação do cliente e do armazenamento de dados (servidor), dessa forma, poderemos ter uma portabilidade do nosso sistema, usando o React ou AngularJs para WEB e React Native ou Ionic para o smartphone,  por exemplo.
@@ -61,7 +61,7 @@ http://servicorest.com.br/clientes
 http://servicorest.com.br/clientes/57
 http://servicorest.com.br/vendas
 
-###VERBOS HTTP
+### VERBOS HTTP
 + GET
 	+ Receber dados de um Resource
 + POST
@@ -94,7 +94,7 @@ http://servicorest.com.br/vendas
 			* http://servicorest.com.br/vendas/34/atualizar
 
 
-###STATUS DAS RESPOSTAS
+### STATUS DAS RESPOSTAS
 + 1xx: Informação
 + 2xx: Sucesso
 	+ 200: OK - Em requisições GET, PUT e DELETE executadas com sucesso.
@@ -108,13 +108,13 @@ http://servicorest.com.br/vendas
 	+ 404: Not Found! - Em requisições cuja URI de um determinado recurso seja inválida.
 + 5xx: Server Error 500: Internal Server Error
 
-###O que é RESTful?
+### O que é RESTful?
 
 É um sistema que utiliza utiliza os princípios REST.
 
-#Let`s code
+# Let`s code
 
-###Etapa1
+### Etapa1
 
 1. Criar aplicação NodeJs
 2. O que são Middlewares? 
@@ -125,13 +125,13 @@ http://servicorest.com.br/vendas
 7. Buscar resource
 8. Realizar testes de rotas com Postman
 
-###Etapa 2
+### Etapa 2
 1. Organização dos arquivos por rotas
 2. O que é Jason Web Token (JWT) ?
 3. Criar Basic Authentication
 3. Realizar testes de autenticação com Postman
 
-###Etapa 3
+### Etapa 3
 1. Mongoose
 2. Estabelecer conexão com MongoDB
 3. Criar banco de dados e  coleções.
