@@ -73,10 +73,10 @@ A identificação do recurso deve ser feita utilizando-se o conceito de URI (Uni
 
   
 
-http://servicorest.com.br/produtos
-http://servicorest.com.br/clientes
-http://servicorest.com.br/clientes/57
-http://servicorest.com.br/vendas
++ http://servicorest.com.br/produtos
++ http://servicorest.com.br/clientes
++ http://servicorest.com.br/clientes/57
++ http://servicorest.com.br/vendas
 
  
 ### VERBOS HTTP
@@ -89,7 +89,7 @@ http://servicorest.com.br/vendas
 	+ Atualizar dados de um Resource
 + DELETE
 	+ Deletar um Resource
-	+ 
+	
 ### BOAS PRÁTICAS
 
   
@@ -162,7 +162,8 @@ http://servicorest.com.br/vendas
 1. Organização dos arquivos por rotas
 2. O que é Jason Web Token (JWT) ?
 3. Criar Basic Authentication
-3. Realizar testes de autenticação com Postman
+4. Protegendo as rotas
+5. Realizar testes de autenticação com Postman
   
 ### Etapa 3
 
@@ -192,7 +193,7 @@ http://servicorest.com.br/vendas
 	Rodar servidor - ```node server.js```		
 * Criação de rotas
 	+ Nodemon - Para auxiliar no desenvolvimento
-		``nom install nodemon``
+		``npm install nodemon``
 	+ Utilizar verbos indicados para cada requisição.	
 	```js
 	//GET
@@ -424,7 +425,7 @@ http://servicorest.com.br/vendas
 	* O JWT é um padrão ([RFC-7519](https://tools.ietf.org/html/rfc7519)) de mercado que define como transmitir e armazenar objetos JSON de forma compacta e segura entre diferentes aplicações. Os dados nele contidos podem ser validados a qualquer momento pois o token é assinado digitalmente.
 
 	* Ele é formado por três seções: **Header, Payload e Signature.**
-		+ **Header**  :  O Header é um objeto JSON que define informações sobre o tipo do token (typ), nesse caso JWT, e o algorítmo de criptografia usado em sua assinatura (alg), normalmente [HMAC SHA256](https://tools.ietf.org/html/rfc2104) ou [RSA](https://tools.ietf.org/html/rfc8017).
+		+ **Header**  :  O Header é um objeto JSON que define informações sobre o tipo do token (typ), nesse caso JWT, e o algoritmo de criptografia usado em sua assinatura (alg), normalmente [HMAC SHA256](https://tools.ietf.org/html/rfc2104) ou [RSA](https://tools.ietf.org/html/rfc8017).
 			```json
 			{ 
 				"alg":  "HS256",
@@ -535,6 +536,131 @@ http://servicorest.com.br/vendas
 		router.delete('/profissionais/:id', checkAuth, profissionaisController.remover);
 	
 * Realizar testes de autenticação com Postman
+### Etapa 3
+
+  
+
+1. Mongoose
+
++ Para realizar a comunicação da API com o MongoDB, vamos utilizar um módulo chamado ```mongoose```
+	``` npm install --save mongoose```
+
+2. Estabelecer conexão com MongoDB
+*	Para estabelecer a conexão com o database, vamos adicionar a conexão no arquivo ```server.js```
+	```js
+	//localhost:27017 - Endereco do servidor de banco de dados (localhost)
+	// sauffs2019 - Nome do banco de dados criado
+	const  mongo_connection  =  'mongodb://localhost:27017/sauffs2019'
+	const  option  = {
+		useNewUrlParser:  true,
+		useUnifiedTopology:  true
+	}
+	mongoose.connect(mongo_connection,option).then(function () {
+		console.log("Conectou");
+	}, function (err) {
+		console.log("Falha ao conectar",err);
+	});
+
+3. Criação do Schema do database.
++ Para criar o Schema, vamos criar uma pasta chamada ``model`` e dentro dela um arquivo chamado ``profissionais.js`` , é nesse arquivo que vamos realizar a criação do nosso Schema.
+	 ```js
+	const  mongoose  =  require("mongoose");
+	
+	const  ProfissionalSchema  =  new  mongoose.Schema({
+			nome: {
+				type:  String,
+				required:  true
+			},
+			email: {
+				type:  String,
+				required:  true
+			},
+			data_nascimento:  String,
+			genero:String,
+			tratamento:String,
+			celular:String,
+			especialidade:String
+		},{
+			timestamps:  true
+		}
+	);
+	
+	module.exports  =  mongoose.model("Profissional", ProfissionalSchema);
+
+4. Operações com MongoDB nas rotas da API
+	+ Agora vamos ajustar as funcoes do controller para realizar as operacoes no nosso database criado.
+		+ Primeiramente vamos importar nosso Model para o controller
+		```js 
+		const  Profissional  =  require("../model/profissional");
+	+ Importante frisar que vamos usar um conceito da versão ES7 do Javascript chamado **async await**. Para entender melhor esse conceito, você pode ler esse [artigo](https://braziljs.org/artigos/async-await-js-assincronamente-sincrono/) da BrazilJS.
++  Para gravar um profissional 
+	```js
+	var  salvar  =  async (req, res) => {
+		try {
+			const  data  =  await  Profissional.create(req.body);
+			return  res.status(200).json(data);
+		} catch (error) {
+			console.log(error);
+			return  res.status(500).json(error)
+		}
+	}
++ Para realizar as buscas de profissionais
+	```js
+	var  buscar_todos  =  async (req, res) => {
+
+		try {
+			const  data  =  await  Profissional.find({});
+			return  res.json(data);
+		} catch (error) {
+			console.log(error);
+			return  res.status(500).json(error)
+		}
+	}
+	var  buscar_id  =  async (req, res) => {
+		try {
+			const { id } =  req.params;
+			const  data  =  await  Profissional.findById(id);
+			return  res.json(data);
+		} catch (error) {
+			console.log(error);
+			return  res.status(500).json(error)
+		}
+	}
++  Para atualizar um profissional 
+	```js
+	var  atualizar  =  async (req, res) => {
+
+	  
+
+		try {
+			const { id } =  req.params;
+			const { nome,email} =  req.body;
+			const  update  = {
+				$set: {
+					nome:  nome,
+					email:  email
+				}
+			}
+			const  data  =  await  Profissional.findByIdAndUpdate(id,update);
+			return  res.status(200).json(data);
+		} catch (error) {
+			console.log(error);
+			return  res.status(500).json(error)
+		}
+	}
++  Para remover um profissional 
+	```js
+	var  remover  =  async (req, res) => {
+		try {
+			const { id } =  req.params;
+			const  data  =  await  Profissional.findByIdAndRemove(id);
+			return  res.status(200).json(data);
+		} catch (error) {
+			console.log(error);
+			return  res.status(500).json(error)
+		}
+	}
+6. Realizar testes com Postman
 
 ## Referências 
 
@@ -544,4 +670,5 @@ http://servicorest.com.br/vendas
 +  [https://www.4linux.com.br/o-que-e-middleware](https://www.4linux.com.br/o-que-e-middleware)
 +  [https://www.json.org/json-pt.html](https://www.json.org/json-pt.html)
 +  [https://www.devpleno.com/morgan/](https://www.devpleno.com/morgan/)
-+  [https://medium.com/tableless/entendendo-tokens-jwt-json-web-token-413c6d1397f6](https://medium.com/tableless/entendendo-tokens-jwt-json-web-token-413c6d1397f6)
++ [https://medium.com/@yugagrawal95/mongoose-mongodb-functions-for-crud-application-1f54d74f1b34](https://medium.com/@yugagrawal95/mongoose-mongodb-functions-for-crud-application-1f54d74f1b34)
++ [https://medium.com/@rafaelbarbosadc/criando-uma-api-rest-com-node-js-express-mongoose-f75a27e8cdc1](https://medium.com/@rafaelbarbosadc/criando-uma-api-rest-com-node-js-express-mongoose-f75a27e8cdc1)
