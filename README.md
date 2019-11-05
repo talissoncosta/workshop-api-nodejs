@@ -175,11 +175,11 @@ http://servicorest.com.br/vendas
 # Etapa1
 
 * Criar aplicação NodeJs
-		 ```yarn add -y``` - Inicializa o projeto com o gerenciador de pacotes do node YARN
+		 ```npm init -y``` - Inicializa o projeto com o gerenciador de pacotes do node NPM
 		Adicionar arquivo ```server.js```
 		
 * Express framework
-	* 	```yarn add express```	Instalar o modulo Express com YARN
+	* 	```npm install --save express```	Instalar o modulo Express com NPM
 	*   Criar `Hello World` e rodar o nosso server
 		```js 
 		const  express  =  require('express');
@@ -192,7 +192,7 @@ http://servicorest.com.br/vendas
 	Rodar servidor - ```node server.js```		
 * Criação de rotas
 	+ Nodemon - Para auxiliar no desenvolvimento
-		``yarn add nodemon``
+		``nom install nodemon``
 	+ Utilizar verbos indicados para cada requisição.	
 	```js
 	//GET
@@ -238,7 +238,7 @@ http://servicorest.com.br/vendas
 	* Utilizar o morgan para gerenciar os logs 
 		* O Morgan, que é uma forma de logar ou mostrar quais requisições estão chegando em nosso servidor HTTP.
 	* Adicionando morgan ao projeto
-		```yarn add morgan```
+		```npm install --save morgan```
 	* Utilizar morgan no projeto
 		
 		```js 
@@ -361,114 +361,180 @@ http://servicorest.com.br/vendas
 		router.delete('/profissionais/:id',  profissionaisController.remover);
 		
 		module.exports  =  router;
-	* controller/profissionais.js
-	```js 
-	const  data  =  require("../../profissionais.json");
-	var  buscar_todos  =  (req,  res)  =>  {	
+
+* controller/profissionais.js
+	```js
+	const  data = require("../../profissionais.json");
+
+	var  buscar_todos = (req, res) => {
 		res.status(200).json(data);
 	}
+	var buscar_id = (req, res) => {
+		const { id } = req.params;
+		const profissional = data.find(prof => prof.id == id);
+		
+		if (!profissional) return res.status(204).json();
+		
+		res.status(200).json(profissional);
+	}
+	var salvar = (req, res) => {
+		const { nome, email } = req.body;
+		const profissional = {
+		"id": data.length + 1,
+		"nome": nome,
+		"email": email
+		};
+		
+		data.push(profissional);
+		
+		res.status(200).json(profissional);
+	}
+	var atualizar = (req, res) => {
 
-  
+		const { id } = req.params;
+		
+		const profissional = data.find(prof => prof.id == id);
+		
+		if (!profissional) return res.status(204).json();
+		const { nome,email} = req.body;
+		
+		profissional.nome = nome;
+		profissional.email = email;
 
-var  buscar_id  =  (req,  res)  =>  {
+		res.status(200).json(profissional);
+	}
 
-const  {  id  }  =  req.params;
+	var remover = (req, res) => {
+		const { id } = req.params;
+		const profissional = data.filter(prof => prof.id != id);
+		
+		res.status(200).json(profissional);
+	}
+	module.exports = {
+		buscar_todos,
+		buscar_id,
+		salvar,
+		atualizar,
+		remover
+	}
 
-const  profissional  =  data.find(prof  =>  prof.id  ==  id);
 
-  
 
-if (!profissional) return  res.status(204).json();
-
-  
-
-res.status(200).json(profissional);
-
-}
-
-  
-
-var  salvar  =  (req,  res)  =>  {
-
-const  {  nome,  email  }  =  req.body;
-
-const  profissional  =  {
-
-"id":  data.length +  1,
-
-"nome":  nome,
-
-"email":  email
-
-};
-
-data.push(profissional);
-
-res.status(200).json(profissional);
-
-}
-
-  
-
-var  atualizar  =  (req,  res)  =>  {
-
-const  {  id  }  =  req.params;
-
-const  profissional  =  data.find(prof  =>  prof.id  ==  id);
-
-  
-
-if (!profissional) return  res.status(204).json();
-
-const  {  nome,email}  =  req.body;
-
-  
-
-profissional.nome  =  nome;
-
-profissional.email  =  email;
-
-  
-
-res.status(200).json(profissional);
-
-  
-
-}
-
-  
-
-var  remover  =  (req,  res)  =>  {
-
-const  {  id  }  =  req.params;
-
-const  profissional  =  data.filter(prof  =>  prof.id  !=  id);
-
-  
-
-res.status(200).json(profissional);
-
-  
-
-}
-
-  
-
-module.exports  =  {
-
-buscar_todos,
-
-buscar_id,
-
-salvar,
-
-atualizar,
-
-remover
-}
 * O que é Jason Web Token (JWT) ?
+	* O JWT é um padrão ([RFC-7519](https://tools.ietf.org/html/rfc7519)) de mercado que define como transmitir e armazenar objetos JSON de forma compacta e segura entre diferentes aplicações. Os dados nele contidos podem ser validados a qualquer momento pois o token é assinado digitalmente.
+
+	* Ele é formado por três seções: **Header, Payload e Signature.**
+		+ **Header**  :  O Header é um objeto JSON que define informações sobre o tipo do token (typ), nesse caso JWT, e o algorítmo de criptografia usado em sua assinatura (alg), normalmente [HMAC SHA256](https://tools.ietf.org/html/rfc2104) ou [RSA](https://tools.ietf.org/html/rfc8017).
+			```json
+			{ 
+				"alg":  "HS256",
+				"typ: "JWT" 
+			}
+		+ **Payload**: O Payload é um objeto JSON com as Claims (informações) da entidade tratada, normalmente o usuário autenticado.
+		+ **Signature**: A assinatura é a concatenação dos hashes gerados a partir do Header e Payload usando base64UrlEncode, com uma chave secreta ou certificado RSA.
+		```json
+		HMACSHA256(
+			base64UrlEncode(header) + "." + 
+			base64UrlENcode(payload), 
+			secret
+		)
+		
+	
+		
+	> Apenas quem está de posse da chave (secret) pode criar, alterar e validar o token.
+	
 * Criar Basic Authentication
-*  Realizar testes de autenticação com Postman
+	*  Para criar a autenticacao com JWT, vamos criar uma rota que vai gerar o nosso token.
+	* routes/auth.js
+		```js
+		const  express  =  require('express');
+		const  router  =  express.Router();
+		
+		const  authController  =  require('../controller/auth')
+
+		router.get('/getauth', authController.gerar_jwt);
+		
+		module.exports  =  router;
+	* E a funcao que vai realizar a criacao do nosso token.
+	* Para isso, vamos precisar adicionar ao nosso projeto o modulo ```jsonwebtoken```, utilizando o comando:
+		
+		 ```npm install --save jsonwebtoken```
+	* E nossa funcao para gerar o token fica assim: 
+		```js 
+		const  jwt  =  require('jsonwebtoken');
+		const  uname  =  "ccuffs";
+		const  pword  =  "sacc2019";
+		const  secret  =  "sacc2019ccuffs";
+	
+		var  gerar_jwt  = (req, res) => {
+
+			var { username,password } =  req.body;
+
+			if(username  !=  uname  ||  password  !=  pword){
+				return  res.status(401).send({
+					error:  "AutenticacaoInvalida"
+				})
+			}
+
+			var  tokenData  = {
+				username:  username
+			}
+
+			var  token  =  jwt.sign(tokenData, secret);
+			
+			res.send({
+				token:  "Bearer "  +  token
+			});
+
+		}
+
+		module.exports  = {
+			gerar_jwt
+		}
+
+		 
+	* 
+* Protegendo as rotas
+	* Para proteger as rotas, vamos adicionar a validacao do token para ser executada antes da acao desejada da request. 
+	* Vamos criar uma pasta chamada``middleware``na raiz e adicionar o arquivo que vai conter a funcao que vai realizar a validacao do token.
+		```js 
+		const  jwt  =  require('jsonwebtoken');
+		const  secret  =  "sacc2019ccuffs";
+		
+		module.exports  = (req,res,next) =>{
+			try {
+				const  token  =  req.headers.authorization.split(" ")[1];
+				const  content  =  jwt.verify(token, secret);
+
+				req.body.username  =  content.username;
+				next();
+			
+			} catch(error){
+				console.log(error);
+				return  res.status(401).send({
+				error:  "Auth failed"
+				})
+			}
+		};	
+	* E para cada rota que desejamos proteger, basta adicionar a validacao antes que a acao da rota seja executada:
+	* routes/profissionais.js
+		```js
+		const  checkAuth  =  require("../middleware/check-auth");
+		
+		//GET - Receber dados de um Resource
+		router.get('/profissionais', profissionaisController.buscar_todos);
+		router.get('/profissionais/:id', profissionaisController.buscar_id);
+
+		//POST - Enviar dados ou informações para serem processados por um Resource.
+		router.post('/profissionais', checkAuth, profissionaisController.salvar);
+
+		//PUT - Atualizar dados de um Resource
+		router.put('/profissionais/:id',checkAuth, profissionaisController.atualizar);
+
+		//DELETE - Deletar um Resource
+		router.delete('/profissionais/:id', checkAuth, profissionaisController.remover);
+	
+* Realizar testes de autenticação com Postman
 
 ## Referências 
 
@@ -478,3 +544,4 @@ remover
 +  [https://www.4linux.com.br/o-que-e-middleware](https://www.4linux.com.br/o-que-e-middleware)
 +  [https://www.json.org/json-pt.html](https://www.json.org/json-pt.html)
 +  [https://www.devpleno.com/morgan/](https://www.devpleno.com/morgan/)
++  [https://medium.com/tableless/entendendo-tokens-jwt-json-web-token-413c6d1397f6](https://medium.com/tableless/entendendo-tokens-jwt-json-web-token-413c6d1397f6)
