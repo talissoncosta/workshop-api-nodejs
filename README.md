@@ -543,7 +543,7 @@ A identificação do recurso deve ser feita utilizando-se o conceito de URI (Uni
 1. Mongoose
 
 + Para realizar a comunicação da API com o MongoDB, vamos utilizar um módulo chamado ```mongoose```
-	``` npm install --save mongoose```
++ ``` npm install --save mongoose```
 
 2. Estabelecer conexão com MongoDB
 *	Para estabelecer a conexão com o database, vamos adicionar a conexão no arquivo ```server.js```
