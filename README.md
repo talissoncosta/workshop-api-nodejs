@@ -256,26 +256,26 @@ A identificação do recurso deve ser feita utilizando-se o conceito de URI (Uni
 * Atribuir boas respostas para as requests - Status das respostas
 	* Tratando caso não encontrar nenhum profissional, informando ``status 204 - No content``
 		```js  
-		app.get('/profissionais/:id',  (req,res)  =>{
+		app.get('/profissionais/:id',  (req,res)  => {
 			const  {  id  }  =  req.params;
 			const  profissional  =  data.find( prof  =>  prof.id  ==  id);
-			
+
 			if (!profissional) return  res.status(204).json();
-			
+
 			res.json(profissional);
-			})
+		})
 	
 * Processando rotas - GET, POST, PUT, DELETE
 	* GET
 		```js  
-			app.get('/profissionais/:id',  (req,res)  =>{
-				const  {  id  }  =  req.params;
-				const  profissional  =  data.find( prof  =>  prof.id  ==  id);
-				
-				if (!profissional) return  res.status(204).json();
-				
-				res.json(profissional);
-			})
+		app.get('/profissionais/:id',  (req,res)  => {
+			const  {  id  }  =  req.params;
+			const  profissional  =  data.find( prof  =>  prof.id  ==  id);
+
+			if (!profissional) return  res.status(204).json();
+
+			res.json(profissional);
+		})
 	* POST
 		```js 
 		//POST - Enviar dados ou informações para serem processados por um Resource.
@@ -291,21 +291,21 @@ A identificação do recurso deve ser feita utilizando-se o conceito de URI (Uni
 		})
 	* PUT
 		```js
-			//PUT - Atualizar dados de um Resource 
-			app.put('/profissionais/:id',  (req,res)  =>{
-				const  {  id  }  =  req.params;
-		
-				const  profissional  =  data.find(prof  =>  prof.id  ==  id);
-				
-				if (!profissional) return  res.status(204).json();
-				
-				const  {  nome,  email  }  =  req.body;
-				
-				profissional.nome  =  nome;
-				profissional.email  =  email;
-				
-				res.status(200).json(profissional);
-			})
+		//PUT - Atualizar dados de um Resource 
+		app.put('/profissionais/:id',  (req,res)  =>{
+			const  {  id  }  =  req.params;
+
+			const  profissional  =  data.find(prof  =>  prof.id  ==  id);
+
+			if (!profissional) return  res.status(204).json();
+
+			const  {  nome,  email  }  =  req.body;
+
+			profissional.nome  =  nome;
+			profissional.email  =  email;
+
+			res.status(200).json(profissional);
+		})
 	* DELETE
 		```js
 		//DELETE - Deletar um Resource
@@ -566,7 +566,8 @@ A identificação do recurso deve ser feita utilizando-se o conceito de URI (Uni
 	 ```js
 	const  mongoose  =  require("mongoose");
 	
-	const  ProfissionalSchema  =  new  mongoose.Schema({
+	const  ProfissionalSchema  =  new  mongoose.Schema(
+		{
 			nome: {
 				type:  String,
 				required:  true
@@ -629,9 +630,6 @@ A identificação do recurso deve ser feita utilizando-se o conceito de URI (Uni
 +  Para atualizar um profissional 
 	```js
 	var  atualizar  =  async (req, res) => {
-
-	  
-
 		try {
 			const { id } =  req.params;
 			const { nome,email} =  req.body;
